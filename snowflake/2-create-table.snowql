@@ -1,0 +1,26 @@
+use warehouse sales_wh;
+
+use database sales_db;
+
+alter session set timestamp_type_mapping = timestamp_tz;
+
+create or replace table sales_records
+    (
+        region string null,
+        country string null,
+        item_type string null,
+        sales_channel string null,
+        order_priority string null,
+        order_date date null,
+        order_id string null,
+        ship_date date null,
+        units_sold number(38,2) null,
+        unit_price number(38,2) null,
+        unit_cost number(38,2) null,
+        total_revune number(38,2) null,
+        total_cost number(38,2) null,
+        total_profit number(38,2) null,
+        inserted_on_date date not null default current_date(),
+        inserted_on_timestamp timestamp not null default current_timestamp()
+    );
+
