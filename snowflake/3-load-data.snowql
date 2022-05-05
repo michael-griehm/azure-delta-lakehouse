@@ -4,18 +4,16 @@ use database sales_db;
 
 create stage sales_files;
 
-put file:///Repos/github/michael-griehm/azure-deltalake/data/1000_Sales_Records.csv @sales_files;
+put file:///Repos/github/michael-griehm/azure-delta-lakehouse/data/5000_Sales_Records.csv @sales_files;
 
 list @sales_files;
 
 copy into sales_records (region, country, item_type, sales_channel, order_priority, order_date, order_id, ship_date, units_sold, unit_price, unit_cost, total_revune, total_cost, total_profit)
 from (select F.$1, F.$2, F.$3, F.$4, F.$5, F.$6, F.$7, F.$8, F.$9, F.$10, F.$11, F.$12, F.$13, F.$14 FROM @sales_files as F)
 file_format = (type = csv field_delimiter = ',' skip_header = 1)
-pattern = '.*1000_Sales_Records.csv.gz';
+pattern = '.*5000_Sales_Records.csv.gz';
 
 select * from sales_records;
 
 remove @sales_files
-pattern = '.*1000_Sales_Records.csv.gz';
-
-
+pattern = '.*5000_Sales_Records.csv.gz';
