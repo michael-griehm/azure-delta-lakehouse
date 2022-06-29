@@ -127,6 +127,7 @@ An alternate to Dimensional Modeling is Canonical Data Modeling.  Canonical Data
 
 ## References
 
+- [Apache Spark](https://slower.udemy.com/course/apache-spark-programming-in-python-for-beginners/learn/lecture/20156416#overview)
 - [Databricks, Delta Lake and You - Simon Whiteley](https://www.youtube.com/watch?v=y91r_DLMEq8)
 - [Data Modelling: From Single Table To Star Schema - Chris Barber](https://www.youtube.com/watch?v=F4tK0dwJKU4)
 - [Hadoop Distributed File System](https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html)
