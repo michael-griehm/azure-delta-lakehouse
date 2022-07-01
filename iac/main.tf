@@ -10,7 +10,7 @@ provider "azurerm" {
 }
 
 variable "app_name" {
-  default   = "dlt-lh-smw"
+  default   = "delta-lakehouse"
   type      = string
   sensitive = false
 }
@@ -30,9 +30,8 @@ variable "tags" {
   type = map(string)
 
   default = {
-    application = "delta-lakehouse-slower-mw"
     environment = "demo"
-    workload    = "crypto-analytics"
+    workload = "delta-lakehouse"
   }
 }
 

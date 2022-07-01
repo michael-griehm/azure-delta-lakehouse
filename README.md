@@ -19,7 +19,63 @@ The Data Warehouse was the first enterprise data storage pattern to gain dominan
 
 As organizations began to realize the value of data in the internet age, the need to capture and store all types of data arose.  Data has been called 'The Oil' of the 21st century, and organizations knew they needed to collect as much raw data as possible and would figure out a way to refine the raw data. The Data Lakehouse pattern emerged as an alternative to the structure and discipline required by the Data Warehouse pattern and allowed organizations to collect terabytes of raw data in many different formats.  
 
-### The Benefits and Limitations of Each Pattern
+### The Benefits and Drawbacks of Each Pattern
+
+- Data Warehouse
+  - Benefits
+    - Familiar
+    - Managed Strucutred Data model we can give to the business
+  - Drawbacks
+    - Too rigid
+    - Too slow
+    - Not quick enough to adapt
+- Data Lake
+  - Benefits
+    - Flexible
+    - Distributed
+  - Drawbacks
+    - Disorganized set of files
+    - Inconsistent set of file formats
+    - Inefficient file formats
+
+### Data Lake File Formats
+
+Below is a list of the main file formats used in data lakes
+
+- CSV
+- Avro
+- Parquet
+- Delta
+
+#### CSV
+
+
+
+- Benefits
+  - Human Readable
+  - Easy to read and write
+  - Flexible
+- Brawbacks
+  - Schema-on-Read, no metadata
+  - No compression
+  - No ACID compliance
+  - Unfamiliar data processing pattern
+
+#### Avro
+
+- Benefits
+  - Some compression
+  - Human readable metadata
+- Drawbacks
+  - No ACID compliance
+  - Must have a data processing engine to read and write
+  - Unfamiliar processing pattern
+
+#### Parquet
+
+#### Delta
+
+
 
 ## A Brief History of Big Data
 
@@ -76,6 +132,13 @@ start with and scale-up to big data processing or incredibly large scale."
 The Apache Spark architecture is shown below, most of the development done using Apache Spark is against the Structured APIs.
 
 ![Apache Spark Architecture](diagrams/spark-architecture.drawio.svg)
+
+### Spark
+
+
+
+## Databricks
+
 
 ## Data Modeling in a Lakehouse
 
