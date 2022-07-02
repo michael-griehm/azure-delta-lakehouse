@@ -3,6 +3,9 @@ terraform {
     azurerm = "~> 2.33"
     azuread = "~>2.0"
   }
+
+  # backend "azurerm" {
+  # }
 }
 
 provider "azurerm" {
@@ -21,7 +24,7 @@ variable "env" {
 }
 
 variable "location" {
-  default   = "Central US 2"
+  default   = "East US 2"
   sensitive = false
   type      = string
 }
@@ -31,7 +34,7 @@ variable "tags" {
 
   default = {
     environment = "demo"
-    workload = "delta-lakehouse"
+    workload    = "delta-lakehouse"
   }
 }
 
@@ -39,6 +42,7 @@ variable "admin_user_principal_name" {
   type        = string
   sensitive   = true
   description = "The user principal name of the admin for the app."
+  default = "mikeg@ish-star.com"
 }
 
 locals {
@@ -50,7 +54,6 @@ locals {
 
 data "azurerm_client_config" "current" {}
 
-resource "azurerm_resource_group" "rg" {
-  name     = var.app_name
-  location = var.location
+data "azurerm_resource_group" "rg" {
+  name     = local.fqrn
 }
