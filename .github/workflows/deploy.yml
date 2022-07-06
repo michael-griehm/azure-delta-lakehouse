@@ -1,0 +1,110 @@
+name: deploy
+on: 
+  push:
+    branches:
+      - "main"
+    paths:
+      - iac/**
+      - .github/workflows/deploy.yml
+  workflow_dispatch:
+
+env:
+  WORKLOAD_WORKING_DIRECTORY: iac/workload
+  WORKLOAD_REMOTE_STATE_KEY: delta-lakehouse.terraform.tfstate
+  REMOTE_STATE_RG: delta-lakehouse-demo-eastus2
+  REMOTE_STATE_SA: tfdeltalakehouseed
+  REMOTE_STATE_CONTAINER: delta-lakehouse-remote-state-eastus2-demo
+  ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+  ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+  
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  plan-workload:
+    name: 'plan workload'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKLOAD_WORKING_DIRECTORY }}
+    steps:
+      - name: 'Checkout Repo'
+        uses: actions/checkout@v2
+      - name: 'Azure Login'
+        uses: azure/login@v1
+        with:
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.CLIENT_ID }}
+      - name: 'Get Deployer Secrets'
+        id: get-deployer-secret
+        uses: azure/get-keyvault-secrets@v1
+        with:
+          keyvault: ${{ secrets.DEPLOYER_KEY_VAULT }}
+          secrets: 'delta-lakehouse-demo-eastus2-deployer, tfdeltalakehouseed-access-key'
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v1
+      - name: 'Terraform Init'
+        env: 
+          TF_CLI_ARGS_init: "-backend-config='resource_group_name=${{env.REMOTE_STATE_RG}}' -backend-config='storage_account_name=${{env.REMOTE_STATE_SA}}' -backend-config='container_name=${{env.REMOTE_STATE_CONTAINER}}' -backend-config='key=${{env.WORKLOAD_REMOTE_STATE_KEY}}'"
+          ARM_ACCESS_KEY: ${{ steps.get-deployer-secret.outputs.tfdeltalakehouseed-access-key }}
+        run: terraform init
+      - name: 'Terraform Validate'
+        run: terraform validate
+      - name: 'Terraform Plan'
+        env:        
+          ARM_CLIENT_SECRET: ${{ steps.get-deployer-secret.outputs.delta-lakehouse-demo-eastus2-deployer }}
+          ARM_ACCESS_KEY: ${{ steps.get-deployer-secret.outputs.tfdeltalakehouseed-access-key }}
+        run: terraform plan -out="./workload.tfplan"
+      - name: 'Upload Plan'
+        uses: actions/upload-artifact@v2
+        with:
+          name: workload-plan
+          path: ${{ env.WORKLOAD_WORKING_DIRECTORY }}/workload.tfplan
+          retention-days: 1
+  apply-workload:
+    name: 'apply workload'
+    needs: plan-workload
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repo'
+        uses: actions/checkout@v2
+      - name: 'Download Plan'
+        uses: actions/download-artifact@v2
+        with:
+          name: workload-plan
+      - name: 'Move Plan'
+        run: mv ./workload.tfplan ${{ env.WORKLOAD_WORKING_DIRECTORY }}
+      - name: 'Delete Plan from Repo'
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: workload-plan
+          failOnError: false
+      - name: 'Azure Login'
+        uses: azure/login@v1
+        with:
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.CLIENT_ID }}
+      - name: 'Get Deployer Secrets'
+        id: get-deployer-secret
+        uses: azure/get-keyvault-secrets@v1
+        with:
+          keyvault: ${{ secrets.DEPLOYER_KEY_VAULT }}
+          secrets: 'delta-lakehouse-demo-eastus2-deployer, tfdeltalakehouseed-access-key'
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v1
+      - name: 'Terraform Init'
+        env:
+          TF_CLI_ARGS_init: "-backend-config='resource_group_name=${{env.REMOTE_STATE_RG}}' -backend-config='storage_account_name=${{env.REMOTE_STATE_SA}}' -backend-config='container_name=${{env.REMOTE_STATE_CONTAINER}}' -backend-config='key=${{env.WORKLOAD_REMOTE_STATE_KEY}}'"
+          ARM_ACCESS_KEY: ${{ steps.get-deployer-secret.outputs.tfdeltalakehouseed-access-key }}
+        working-directory: ${{ env.WORKLOAD_WORKING_DIRECTORY }}
+        run: terraform init
+      - name:  'Terraform Apply'
+        env:
+          ARM_CLIENT_SECRET: ${{ steps.get-deployer-secret.outputs.delta-lakehouse-demo-eastus2-deployer }}
+          ARM_ACCESS_KEY: ${{ steps.get-deployer-secret.outputs.tfdeltalakehouseed-access-key }}
+        working-directory: ${{ env.WORKLOAD_WORKING_DIRECTORY }}
+        run: terraform apply -auto-approve "./workload.tfplan"
