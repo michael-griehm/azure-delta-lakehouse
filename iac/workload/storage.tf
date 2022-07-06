@@ -19,17 +19,31 @@ data "azurerm_subnet" "storage_private_endpoint" {
   virtual_network_name = "delta-lakehouse-storage-spoke"
 }
 
-resource "azurerm_private_endpoint" "bronze_private_endpoint" {
-  name                = "dltalakehousebronze-private-endpoint"
+resource "azurerm_private_endpoint" "bronze_blob_private_endpoint" {
+  name                = "dltalakehousebronze-blob-private-endpoint"
   location            = data.azurerm_resource_group.rg.location
   resource_group_name = data.azurerm_resource_group.rg.name
   subnet_id           = data.azurerm_subnet.storage_private_endpoint.id
 
   private_service_connection {
-    name                           = "dltalakehousebronze-private-service-connection"
+    name                           = "dltalakehousebronze-blob-private-service-connection"
     private_connection_resource_id = azurerm_storage_account.bronze.id
     is_manual_connection           = false
-    subresource_names              = ["blob", "dfs"]
+    subresource_names              = ["blob"]
+  }
+}
+
+resource "azurerm_private_endpoint" "bronze_dfs_private_endpoint" {
+  name                = "dltalakehousebronze-dfs-private-endpoint"
+  location            = data.azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  subnet_id           = data.azurerm_subnet.storage_private_endpoint.id
+
+  private_service_connection {
+    name                           = "dltalakehousebronze-dfs-private-service-connection"
+    private_connection_resource_id = azurerm_storage_account.bronze.id
+    is_manual_connection           = false
+    subresource_names              = ["dfs"]
   }
 }
 
