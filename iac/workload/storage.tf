@@ -19,6 +19,11 @@ data "azurerm_subnet" "storage_private_endpoint" {
   virtual_network_name = "delta-lakehouse-storage-spoke"
 }
 
+data "azurerm_private_dns_zone" "delta_lakehouse_blobs" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = "networking-demo-eastus2"
+}
+
 resource "azurerm_private_endpoint" "bronze_blob_private_endpoint" {
   name                = "dltalakehousebronze-blob-private-endpoint"
   location            = data.azurerm_resource_group.rg.location
@@ -31,6 +36,16 @@ resource "azurerm_private_endpoint" "bronze_blob_private_endpoint" {
     is_manual_connection           = false
     subresource_names              = ["blob"]
   }
+
+  private_dns_zone_group {
+    name = "privatelink.blob.core.windows.net"
+    private_dns_zone_ids = [ data.azurerm_private_dns_zone.delta_lakehouse_blobs.id ]
+  }
+}
+
+data "azurerm_private_dns_zone" "delta_lakehouse_dfs" {
+  name                = "privatelink.dfs.core.windows.net"
+  resource_group_name = "networking-demo-eastus2"
 }
 
 resource "azurerm_private_endpoint" "bronze_dfs_private_endpoint" {
@@ -44,6 +59,11 @@ resource "azurerm_private_endpoint" "bronze_dfs_private_endpoint" {
     private_connection_resource_id = azurerm_storage_account.bronze.id
     is_manual_connection           = false
     subresource_names              = ["dfs"]
+  }
+
+  private_dns_zone_group {
+    name = "privatelink.dfs.core.windows.net"
+    private_dns_zone_ids = [ data.azurerm_private_dns_zone.delta_lakehouse_dfs.id ]
   }
 }
 
