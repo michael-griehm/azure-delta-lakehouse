@@ -33,6 +33,14 @@ resource "azurerm_private_endpoint" "bronze_blob_private_endpoint" {
   }
 }
 
+resource "azurerm_private_dns_a_record" "bronze_storage_blob_a_record" {
+  name                = azurerm_storage_account.bronze.name
+  zone_name           = "privatelink.blob.core.windows.net"
+  resource_group_name = "networking-demo-eastus2"
+  ttl                 = 300
+  records             = [ azurerm_private_endpoint.bronze_blob_private_endpoint.private_service_connection[0].private_ip_address ]
+}
+
 resource "azurerm_private_endpoint" "bronze_dfs_private_endpoint" {
   name                = "dltalakehousebronze-dfs-private-endpoint"
   location            = data.azurerm_resource_group.rg.location
@@ -45,6 +53,14 @@ resource "azurerm_private_endpoint" "bronze_dfs_private_endpoint" {
     is_manual_connection           = false
     subresource_names              = ["dfs"]
   }
+}
+
+resource "azurerm_private_dns_a_record" "bronze_storage_dfs_a_record" {
+  name                = azurerm_storage_account.bronze.name
+  zone_name           = "privatelink.dfs.core.windows.net"
+  resource_group_name = "networking-demo-eastus2"
+  ttl                 = 300
+  records             = [ azurerm_private_endpoint.bronze_blob_private_endpoint.private_service_connection[0].private_ip_address ]
 }
 
 resource "azurerm_storage_account" "silver" {
