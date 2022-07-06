@@ -42,7 +42,7 @@ variable "admin_user_principal_name" {
   type        = string
   sensitive   = true
   description = "The user principal name of the admin for the app."
-  default = "mikeg@ish-star.com"
+  default     = "mikeg@ish-star.com"
 }
 
 locals {
@@ -55,5 +55,5 @@ locals {
 data "azurerm_client_config" "current" {}
 
 data "azurerm_resource_group" "rg" {
-  name     = local.fqrn
+  name = local.fqrn
 }

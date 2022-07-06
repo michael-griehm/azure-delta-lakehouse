@@ -34,7 +34,7 @@ resource "azurerm_private_endpoint" "bronze_private_endpoint" {
 }
 
 resource "azurerm_storage_account" "silver" {
-  name                     = "${local.a_name}-silver"
+  name                     = "dltalakehousesilver"
   resource_group_name      = data.azurerm_resource_group.rg.name
   location                 = data.azurerm_resource_group.rg.location
   account_tier             = "Standard"
@@ -44,7 +44,7 @@ resource "azurerm_storage_account" "silver" {
 }
 
 resource "azurerm_storage_account" "gold" {
-  name                     = "${local.a_name}-gold"
+  name                     = "dltalakehousegold"
   resource_group_name      = data.azurerm_resource_group.rg.name
   location                 = data.azurerm_resource_group.rg.location
   account_tier             = "Standard"
