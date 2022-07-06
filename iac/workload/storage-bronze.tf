@@ -8,7 +8,7 @@ resource "azurerm_storage_account" "bronze" {
   is_hns_enabled           = "true"
 
   network_rules {
-    default_action = "Deny"
+    default_action = "Allow"
     bypass         = ["AzureServices"]
   }
 }
@@ -51,7 +51,7 @@ resource "azurerm_private_endpoint" "bronze_dfs_private_endpoint" {
   }
 }
 
-resource "azurerm_storage_container" "example" {
+resource "azurerm_storage_container" "crypto" {
   name                  = "crypto-stream"
   storage_account_name  = azurerm_storage_account.bronze.name
   container_access_type = "private"
