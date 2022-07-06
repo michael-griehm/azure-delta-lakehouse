@@ -4,8 +4,8 @@ terraform {
     azuread = "~>2.0"
   }
 
-  # backend "azurerm" {
-  # }
+  backend "azurerm" {
+  }
 }
 
 provider "azurerm" {
