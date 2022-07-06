@@ -50,3 +50,9 @@ resource "azurerm_private_endpoint" "bronze_dfs_private_endpoint" {
     private_dns_zone_ids = [ data.azurerm_private_dns_zone.delta_lakehouse_dfs.id ]
   }
 }
+
+resource "azurerm_storage_container" "example" {
+  name                  = "crypto-stream"
+  storage_account_name  = azurerm_storage_account.bronze.name
+  container_access_type = "private"
+}
