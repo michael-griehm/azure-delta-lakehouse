@@ -27,8 +27,8 @@ resource "azurerm_private_endpoint" "silver_blob_private_endpoint" {
   }
 
   private_dns_zone_group {
-    name = "privatelink.blob.core.windows.net"
-    private_dns_zone_ids = [ data.azurerm_private_dns_zone.delta_lakehouse_blobs.id ]
+    name                 = "privatelink.blob.core.windows.net"
+    private_dns_zone_ids = [data.azurerm_private_dns_zone.delta_lakehouse_blobs.id]
   }
 }
 
@@ -46,7 +46,7 @@ resource "azurerm_private_endpoint" "silver_dfs_private_endpoint" {
   }
 
   private_dns_zone_group {
-    name = "privatelink.dfs.core.windows.net"
-    private_dns_zone_ids = [ data.azurerm_private_dns_zone.delta_lakehouse_dfs.id ]
+    name                 = "privatelink.dfs.core.windows.net"
+    private_dns_zone_ids = [data.azurerm_private_dns_zone.delta_lakehouse_dfs.id]
   }
 }

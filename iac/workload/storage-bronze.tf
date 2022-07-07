@@ -27,8 +27,8 @@ resource "azurerm_private_endpoint" "bronze_blob_private_endpoint" {
   }
 
   private_dns_zone_group {
-    name = "dltalakehouse-blob-private-dns-zone-group"
-    private_dns_zone_ids = [ data.azurerm_private_dns_zone.delta_lakehouse_blobs.id ]
+    name                 = "dltalakehouse-blob-private-dns-zone-group"
+    private_dns_zone_ids = [data.azurerm_private_dns_zone.delta_lakehouse_blobs.id]
   }
 }
 
@@ -46,8 +46,8 @@ resource "azurerm_private_endpoint" "bronze_dfs_private_endpoint" {
   }
 
   private_dns_zone_group {
-    name = "dltalakehouse-dfs-private-dns-zone-group"
-    private_dns_zone_ids = [ data.azurerm_private_dns_zone.delta_lakehouse_dfs.id ]
+    name                 = "dltalakehouse-dfs-private-dns-zone-group"
+    private_dns_zone_ids = [data.azurerm_private_dns_zone.delta_lakehouse_dfs.id]
   }
 }
 
