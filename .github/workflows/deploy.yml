@@ -27,7 +27,7 @@ permissions:
 jobs:
   plan-key-vault:
     name: 'plan key vault'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     defaults:
       run:
         working-directory: ${{ env.KEY_VAULT_WORKING_DIRECTORY }}
@@ -69,7 +69,7 @@ jobs:
   apply-key-vault:
     name: 'apply key vault'
     needs: plan-key-vault
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: 'Checkout Repo'
         uses: actions/checkout@v2
@@ -113,7 +113,7 @@ jobs:
   plan-workload:
     name: 'plan workload'
     needs: apply-key-vault
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     defaults:
       run:
         working-directory: ${{ env.WORKLOAD_WORKING_DIRECTORY }}
@@ -155,7 +155,7 @@ jobs:
   apply-workload:
     name: 'apply workload'
     needs: plan-workload
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: 'Checkout Repo'
         uses: actions/checkout@v2
