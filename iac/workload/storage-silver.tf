@@ -8,7 +8,7 @@ resource "azurerm_storage_account" "silver" {
   is_hns_enabled           = "true"
 
   network_rules {
-    default_action = "Deny"
+    default_action = "Allow"
     bypass         = ["AzureServices"]
   }
 }
@@ -51,7 +51,7 @@ resource "azurerm_storage_account" "silver" {
 #   }
 # }
 
-resource "azurerm_storage_container" "crypto" {
+resource "azurerm_storage_container" "silver_crypto" {
   name                  = "crypto-data"
   storage_account_name  = azurerm_storage_account.silver.name
   container_access_type = "private"

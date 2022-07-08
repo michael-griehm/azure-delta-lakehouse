@@ -8,7 +8,7 @@ resource "azurerm_storage_account" "gold" {
   is_hns_enabled           = "true"
 
   network_rules {
-    default_action = "Deny"
+    default_action = "Allow"
     bypass         = ["AzureServices"]
   }
 }
@@ -51,7 +51,7 @@ resource "azurerm_storage_account" "gold" {
 #   }
 # }
 
-resource "azurerm_storage_container" "crypto" {
+resource "azurerm_storage_container" "gold_crypto" {
   name                  = "crypto-data"
   storage_account_name  = azurerm_storage_account.gold.name
   container_access_type = "private"
