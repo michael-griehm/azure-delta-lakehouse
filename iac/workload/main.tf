@@ -45,10 +45,6 @@ variable "admin_user_principal_name" {
   default     = "mikeg@ish-star.com"
 }
 
-data "azuread_user" "workload_admin" {
-  user_principal_name = var.admin_user_principal_name
-}
-
 locals {
   loc            = lower(replace(var.location, " ", ""))
   a_name         = replace(var.app_name, "-", "")
