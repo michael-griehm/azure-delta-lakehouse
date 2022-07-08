@@ -13,7 +13,7 @@ resource "azurerm_key_vault" "secret_scope_vault" {
 resource "azurerm_key_vault_access_policy" "admin_acl" {
   key_vault_id = azurerm_key_vault.secret_scope_vault.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azuread_user.admin.object_id
+  object_id    = data.azuread_user.workload_admin.object_id
 
   secret_permissions = [
     "Backup",
