@@ -21,7 +21,7 @@ resource "azurerm_private_endpoint" "gold_blob_private_endpoint" {
 
   private_service_connection {
     name                           = "dltalakehousegold-blob-private-service-connection"
-    private_connection_resource_id = azurerm_storage_account.bronze.id
+    private_connection_resource_id = azurerm_storage_account.gold.id
     is_manual_connection           = false
     subresource_names              = ["blob"]
   }
@@ -40,7 +40,7 @@ resource "azurerm_private_endpoint" "gold_dfs_private_endpoint" {
 
   private_service_connection {
     name                           = "dltalakehousegold-dfs-private-service-connection"
-    private_connection_resource_id = azurerm_storage_account.bronze.id
+    private_connection_resource_id = azurerm_storage_account.gold.id
     is_manual_connection           = false
     subresource_names              = ["dfs"]
   }
