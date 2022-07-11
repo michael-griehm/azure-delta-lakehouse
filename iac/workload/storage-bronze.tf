@@ -8,7 +8,7 @@ resource "azurerm_storage_account" "bronze" {
   is_hns_enabled           = "true"
 
   network_rules {
-    default_action = "Allow"
+    default_action = "Deny"
     bypass         = ["AzureServices"]
   }
 }
