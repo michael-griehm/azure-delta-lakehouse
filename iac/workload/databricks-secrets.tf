@@ -1,5 +1,5 @@
 data "azurerm_key_vault" "vault" {
-  name                = "dlta-lakehouse-kv"
+  name                = "dlta-lkehse-kv"
   resource_group_name = data.azurerm_resource_group.rg.name
 }
 
