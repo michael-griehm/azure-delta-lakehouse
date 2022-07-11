@@ -1,5 +1,5 @@
 resource "azurerm_key_vault" "secret_scope_vault" {
-  name                        = "dlta-lakehouse-kv"
+  name                        = "dlta-lkehse-kv"
   resource_group_name         = data.azurerm_resource_group.rg.name
   location                    = data.azurerm_resource_group.rg.location
   tenant_id                   = data.azurerm_client_config.current.tenant_id
