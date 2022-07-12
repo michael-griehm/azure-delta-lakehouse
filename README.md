@@ -198,6 +198,8 @@ An alternate to Dimensional Modeling is Canonical Data Modeling.  Canonical Data
 - [MapReduce](https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf)
 - [The Delta Lake Series Lakehouse](https://databricks.com/wp-content/uploads/2021/04/The-Delta-Lake-Series-Lakehouse-012921.pdf?itm_data=nurturety-card-lakehouse-pdf)
 - [The Google File System](https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf)
+- [Creating and mounting an Azure data lake in Databricks via Terraform](https://federico.is/posts/2020/09/16/mount-azure-data-lake-in-databricks-via-terraform/)
+- [Databricks on Azure with Terraform](https://brendanthompson.com/posts/2021/08/databricks-on-azure-with-terraform)
 
 ## Potential Demo Data Source
 
