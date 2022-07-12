@@ -32,10 +32,4 @@ resource "azurerm_databricks_workspace" "dbx" {
     private_subnet_name                                  = "dbx-private"
     storage_account_name                                 = "dltalakehousedbfs"
   }
-
-  depends_on = [
-    azurerm_storage_account.dbfs,
-    azurerm_private_endpoint.dbfs_blob_private_endpoint,
-    azurerm_private_endpoint.dbfs_dfs_private_endpoint
-  ]
 }
