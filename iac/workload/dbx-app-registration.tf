@@ -1,5 +1,5 @@
 resource "azuread_application" "dbx_app_reg" {
-  display_name = "${var.app_name}-app-registration"
+  display_name = "${var.app_name}-dbx-app-registration"
   owners = [
     data.azurerm_client_config.current.object_id,
     data.azuread_user.workload_admin.object_id
