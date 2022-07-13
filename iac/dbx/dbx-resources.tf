@@ -17,9 +17,9 @@ data "databricks_node_type" "smallest" {
   local_disk = true
 }
 
-resource "databricks_user" "dbx_admin" {
-  user_name = data.azuread_user.workload_admin.user_principal_name
-}
+# resource "databricks_user" "dbx_admin" {
+#   user_name = data.azuread_user.workload_admin.user_principal_name
+# }
 
 resource "databricks_cluster" "experiment" {
   cluster_name            = "admin-experiment-cluster"
