@@ -21,8 +21,25 @@ data "databricks_node_type" "smallest" {
 #   user_name = data.azuread_user.workload_admin.user_principal_name
 # }
 
-resource "databricks_cluster" "experiment" {
-  cluster_name            = "admin-experiment-cluster"
+# resource "databricks_cluster" "experiment" {
+#   cluster_name            = "admin-experiment-cluster"
+#   spark_version           = data.databricks_spark_version.latest.id
+#   node_type_id            = data.databricks_node_type.smallest.id
+#   autotermination_minutes = 15
+#   single_user_name        = data.azuread_user.workload_admin.user_principal_name
+
+#   autoscale {
+#     min_workers = 1
+#     max_workers = 3
+#   }
+
+#   spark_conf = {
+#     "spark.databricks.passthrough.enabled" : "true"
+#   }
+# }
+
+resource "databricks_cluster" "high-concurrency-experiment" {
+  cluster_name            = "high-concurrency-experiment"
   spark_version           = data.databricks_spark_version.latest.id
   node_type_id            = data.databricks_node_type.smallest.id
   autotermination_minutes = 15
@@ -30,11 +47,14 @@ resource "databricks_cluster" "experiment" {
 
   autoscale {
     min_workers = 1
-    max_workers = 3
+    max_workers = 2
   }
 
   spark_conf = {
-    "spark.databricks.passthrough.enabled" : "true"
+    "spark.databricks.cluster.profile": "serverless",
+    "spark.databricks.repl.allowedLanguages": "python,sql",
+    "spark.databricks.passthrough.enabled": "true",
+    "spark.databricks.pyspark.enableProcessIsolation": "true"
   }
 }
 
