@@ -91,7 +91,7 @@ resource "azuread_group" "gold_crypto_quotes_reader_group" {
   ]
 }
 
-resource "azurerm_storage_container" "gold_crypto" {
+resource "azurerm_storage_data_lake_gen2_filesystem" "gold_crypto" {
   name                  = "crypto-data"
   storage_account_name  = azurerm_storage_account.gold.name
   container_access_type = "private"
