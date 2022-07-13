@@ -77,7 +77,7 @@ resource "azuread_group" "gold_crypto_quotes_writer_group" {
 
   owners = [
     data.azurerm_client_config.current.object_id,
-    data.azuread_user.admin.object_id
+    data.azuread_user.workload_admin.object_id
   ]
 }
 
@@ -87,7 +87,7 @@ resource "azuread_group" "gold_crypto_quotes_reader_group" {
 
   owners = [
     data.azurerm_client_config.current.object_id,
-    data.azuread_user.admin.object_id
+    data.azuread_user.workload_admin.object_id
   ]
 }
 
