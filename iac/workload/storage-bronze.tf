@@ -92,9 +92,8 @@ resource "azuread_group" "bronze_crypto_quotes_reader_group" {
 }
 
 resource "azurerm_storage_data_lake_gen2_filesystem" "bronze_crypto" {
-  name                  = "crypto-stream"
-  storage_account_name  = azurerm_storage_account.bronze.name
-  container_access_type = "private"
+  name               = "crypto-stream"
+  storage_account_id = azurerm_storage_account.bronze.id
 
   ace {
     scope       = "default"
