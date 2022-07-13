@@ -51,8 +51,85 @@ resource "azurerm_private_endpoint" "bronze_dfs_private_endpoint" {
   }
 }
 
+resource "azuread_group" "bronze_crypto_quotes_admin_group" {
+  display_name     = "delta-lakehouse-bronze-crypto-quotes-admin"
+  security_enabled = true
+
+  owners = [
+    data.azurerm_client_config.current.object_id,
+    data.azuread_user.workload_admin.object_id
+  ]
+}
+
+resource "azuread_group_member" "bronze_crypto_quotes_admin_group_member" {
+  group_object_id  = azuread_group.bronze_crypto_quotes_admin_group.object_id
+  member_object_id = data.azuread_user.workload_admin.object_id
+}
+
+resource "azuread_group_member" "bronze_crypto_quotes_admim_group_member_deployer" {
+  group_object_id  = azuread_group.bronze_crypto_quotes_admin_group.object_id
+  member_object_id = data.azurerm_client_config.current.object_id
+}
+
+resource "azuread_group" "bronze_crypto_quotes_writer_group" {
+  display_name     = "delta-lakehouse-bronze-crypto-quotes-writer"
+  security_enabled = true
+
+  owners = [
+    data.azurerm_client_config.current.object_id,
+    data.azuread_user.admin.object_id
+  ]
+}
+
+resource "azuread_group" "bronze_crypto_quotes_reader_group" {
+  display_name     = "delta-lakehouse-bronze-crypto-quotes-reader"
+  security_enabled = true
+
+  owners = [
+    data.azurerm_client_config.current.object_id,
+    data.azuread_user.admin.object_id
+  ]
+}
+
 resource "azurerm_storage_container" "bronze_crypto" {
   name                  = "crypto-stream"
   storage_account_name  = azurerm_storage_account.bronze.name
   container_access_type = "private"
+
+  ace {
+    scope       = "default"
+    type        = "group"
+    id          = azuread_group.bronze_crypto_quotes_admin_group.object_id
+    permissions = "rwx"
+  }
+  ace {
+    scope       = "access"
+    type        = "group"
+    id          = azuread_group.bronze_crypto_quotes_admin_group.object_id
+    permissions = "rwx"
+  }
+  ace {
+    scope       = "default"
+    type        = "group"
+    id          = azuread_group.bronze_crypto_quotes_reader_group.object_id
+    permissions = "r--"
+  }
+  ace {
+    scope       = "access"
+    type        = "group"
+    id          = azuread_group.bronze_crypto_quotes_reader_group.object_id
+    permissions = "r--"
+  }
+  ace {
+    scope       = "default"
+    type        = "group"
+    id          = azuread_group.bronze_crypto_quotes_writer_group.object_id
+    permissions = "-w-"
+  }
+  ace {
+    scope       = "access"
+    type        = "group"
+    id          = azuread_group.bronze_crypto_quotes_writer_group.object_id
+    permissions = "-w-"
+  }
 }
