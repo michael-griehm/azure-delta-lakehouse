@@ -13,6 +13,8 @@ env:
   KEY_VAULT_REMOTE_STATE_KEY: delta-lakehouse-key-vaults.terraform.tfstate
   WORKLOAD_WORKING_DIRECTORY: iac/workload
   WORKLOAD_REMOTE_STATE_KEY: delta-lakehouse.terraform.tfstate
+  DBX_RESOURCES_WORKING_DIRECTORY: iac/dbx
+  DBX_RESOURCES_REMOTE_STATE_KEY: dbx-resources.terraform.tfstate
   REMOTE_STATE_RG: delta-lakehouse-demo-eastus2
   REMOTE_STATE_SA: tfdeltalakehouseed
   REMOTE_STATE_CONTAINER: delta-lakehouse-remote-state-eastus2-demo
@@ -196,3 +198,92 @@ jobs:
           ARM_ACCESS_KEY: ${{ steps.get-deployer-secret.outputs.tfdeltalakehouseed-access-key }}
         working-directory: ${{ env.WORKLOAD_WORKING_DIRECTORY }}
         run: terraform apply -auto-approve "./workload.tfplan"
+  plan-dbx-resources:
+      name: 'plan dbx resources'
+      needs: apply-workload
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ${{ env.DBX_RESOURCES_WORKING_DIRECTORY }}
+      steps:
+        - name: 'Checkout Repo'
+          uses: actions/checkout@v2
+        - name: 'Azure Login'
+          uses: azure/login@v1
+          with:
+            tenant-id: ${{ secrets.TENANT_ID }}
+            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+            client-id: ${{ secrets.CLIENT_ID }}
+        - name: 'Get Deployer Secrets'
+          id: get-deployer-secret
+          uses: azure/get-keyvault-secrets@v1
+          with:
+            keyvault: ${{ secrets.DEPLOYER_KEY_VAULT }}
+            secrets: 'delta-lakehouse-demo-eastus2-deployer, tfdeltalakehouseed-access-key'
+        - name: 'Setup Terraform'
+          uses: hashicorp/setup-terraform@v1
+        - name: 'Terraform Init'
+          env: 
+            TF_CLI_ARGS_init: "-backend-config='resource_group_name=${{env.REMOTE_STATE_RG}}' -backend-config='storage_account_name=${{env.REMOTE_STATE_SA}}' -backend-config='container_name=${{env.REMOTE_STATE_CONTAINER}}' -backend-config='key=${{env.DBX_RESOURCES_REMOTE_STATE_KEY}}'"
+            ARM_ACCESS_KEY: ${{ steps.get-deployer-secret.outputs.tfdeltalakehouseed-access-key }}
+          run: terraform init
+        - name: 'Terraform Validate'
+          run: terraform validate
+        - name: 'Terraform Plan'
+          env:        
+            ARM_CLIENT_SECRET: ${{ steps.get-deployer-secret.outputs.delta-lakehouse-demo-eastus2-deployer }}
+            TF_VAR_client_secret: ${{ steps.get-deployer-secret.outputs.delta-lakehouse-demo-eastus2-deployer }}
+            ARM_ACCESS_KEY: ${{ steps.get-deployer-secret.outputs.tfdeltalakehouseed-access-key }}
+          run: terraform plan -out="./dbx-resources.tfplan"
+        - name: 'Upload Plan'
+          uses: actions/upload-artifact@v2
+          with:
+            name: dbx-resources-plan
+            path: ${{ env.DBX_RESOURCES_WORKING_DIRECTORY }}/dbx-resources.tfplan
+            retention-days: 1
+  apply-dbx-resources:
+    name: 'apply dbx resources'
+    needs: plan-dbx-resources
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repo'
+        uses: actions/checkout@v2
+      - name: 'Download Plan'
+        uses: actions/download-artifact@v2
+        with:
+          name: dbx-resources-plan
+      - name: 'Move Plan'
+        run: mv ./dbx-resources.tfplan ${{ env.DBX_RESOURCES_WORKING_DIRECTORY }}
+      - name: 'Delete Plan from Repo'
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: dbx-resources-plan
+          failOnError: false
+      - name: 'Azure Login'
+        uses: azure/login@v1
+        with:
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.CLIENT_ID }}
+      - name: 'Get Deployer Secrets'
+        id: get-deployer-secret
+        uses: azure/get-keyvault-secrets@v1
+        with:
+          keyvault: ${{ secrets.DEPLOYER_KEY_VAULT }}
+          secrets: 'delta-lakehouse-demo-eastus2-deployer, tfdeltalakehouseed-access-key'
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
+      - name: 'Terraform Init'
+        env: 
+          TF_CLI_ARGS_init: "-backend-config='resource_group_name=${{env.REMOTE_STATE_RG}}' -backend-config='storage_account_name=${{env.REMOTE_STATE_SA}}' -backend-config='container_name=${{env.REMOTE_STATE_CONTAINER}}' -backend-config='key=${{env.DBX_RESOURCES_REMOTE_STATE_KEY}}'"
+          ARM_ACCESS_KEY: ${{ steps.get-deployer-secret.outputs.tfdeltalakehouseed-access-key }}
+        working-directory: ${{ env.DBX_RESOURCES_WORKING_DIRECTORY }}
+        run: terraform init
+      - name:  'Terraform Apply'
+        env:
+          ARM_CLIENT_SECRET: ${{ steps.get-deployer-secret.outputs.delta-lakehouse-demo-eastus2-deployer }}
+          ARM_ACCESS_KEY: ${{ steps.get-deployer-secret.outputs.tfdeltalakehouseed-access-key }}
+        working-directory: ${{ env.DBX_RESOURCES_WORKING_DIRECTORY }}
+        run: terraform apply -auto-approve "./dbx-resources.tfplan"
