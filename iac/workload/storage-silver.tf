@@ -19,6 +19,12 @@ resource "azurerm_role_assignment" "silver_deployer_role_assignment" {
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
+resource "azurerm_role_assignment" "silver_admin_role_assignment" {
+  scope                = azurerm_storage_account.silver.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = data.azuread_user.workload_admin.object_id
+}
+
 resource "azurerm_private_endpoint" "silver_blob_private_endpoint" {
   name                = "dltalakehousesilver-blob-private-endpoint"
   location            = data.azurerm_resource_group.rg.location

@@ -201,7 +201,7 @@ jobs:
   plan-dbx-resources:
       name: 'plan dbx resources'
       needs: apply-workload
-      runs-on: ubuntu-latest
+      runs-on: self-hosted
       defaults:
         run:
           working-directory: ${{ env.DBX_RESOURCES_WORKING_DIRECTORY }}
@@ -244,7 +244,7 @@ jobs:
   apply-dbx-resources:
     name: 'apply dbx resources'
     needs: plan-dbx-resources
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: 'Checkout Repo'
         uses: actions/checkout@v2
