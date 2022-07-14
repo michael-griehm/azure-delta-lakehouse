@@ -13,6 +13,12 @@ resource "azurerm_storage_account" "gold" {
   }
 }
 
+resource "azurerm_role_assignment" "gold_deployer_role_assignment" {
+  scope                = azurerm_storage_account.gold.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
 resource "azurerm_private_endpoint" "gold_blob_private_endpoint" {
   name                = "dltalakehousegold-blob-private-endpoint"
   location            = data.azurerm_resource_group.rg.location
@@ -131,6 +137,10 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "gold_crypto" {
     id          = azuread_group.gold_crypto_quotes_writer_group.object_id
     permissions = "-w-"
   }
+
+  depends_on = [
+    azurerm_role_assignment.gold_deployer_role_assignment
+  ]
 }
 
 resource "azurerm_storage_data_lake_gen2_path" "gold_crypto_fact" {
@@ -175,6 +185,10 @@ resource "azurerm_storage_data_lake_gen2_path" "gold_crypto_fact" {
     id          = azuread_group.gold_crypto_quotes_writer_group.object_id
     permissions = "-w-"
   }
+
+  depends_on = [
+    azurerm_role_assignment.gold_deployer_role_assignment
+  ]
 }
 
 resource "azurerm_storage_data_lake_gen2_path" "gold_crypto_dim" {
@@ -219,4 +233,8 @@ resource "azurerm_storage_data_lake_gen2_path" "gold_crypto_dim" {
     id          = azuread_group.gold_crypto_quotes_writer_group.object_id
     permissions = "-w-"
   }
+
+  depends_on = [
+    azurerm_role_assignment.gold_deployer_role_assignment
+  ]
 }

@@ -13,6 +13,12 @@ resource "azurerm_storage_account" "bronze" {
   }
 }
 
+resource "azurerm_role_assignment" "bronze_deployer_role_assignment" {
+  scope                = azurerm_storage_account.bronze.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
 resource "azurerm_private_endpoint" "bronze_blob_private_endpoint" {
   name                = "dltalakehousebronze-blob-private-endpoint"
   location            = data.azurerm_resource_group.rg.location
@@ -131,4 +137,8 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "bronze_crypto" {
     id          = azuread_group.bronze_crypto_quotes_writer_group.object_id
     permissions = "-w-"
   }
+
+  depends_on = [
+    azurerm_role_assignment.bronze_deployer_role_assignment
+  ]
 }
