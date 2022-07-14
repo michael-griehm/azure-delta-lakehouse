@@ -132,3 +132,91 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "gold_crypto" {
     permissions = "-w-"
   }
 }
+
+resource "azurerm_storage_data_lake_gen2_path" "gold_crypto_fact" {
+  path               = "crypto-fact"
+  resource           = "directory"
+  storage_account_id = azurerm_storage_account.gold.id
+  filesystem_name    = azurerm_storage_data_lake_gen2_filesystem.gold_crypto.name
+
+  ace {
+    scope       = "default"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_admin_group.object_id
+    permissions = "rwx"
+  }
+  ace {
+    scope       = "access"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_admin_group.object_id
+    permissions = "rwx"
+  }
+  ace {
+    scope       = "default"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_reader_group.object_id
+    permissions = "r--"
+  }
+  ace {
+    scope       = "access"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_reader_group.object_id
+    permissions = "r--"
+  }
+  ace {
+    scope       = "default"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_writer_group.object_id
+    permissions = "-w-"
+  }
+  ace {
+    scope       = "access"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_writer_group.object_id
+    permissions = "-w-"
+  }
+}
+
+resource "azurerm_storage_data_lake_gen2_path" "gold_crypto_dim" {
+  path               = "crypto-dim"
+  resource           = "directory"
+  storage_account_id = azurerm_storage_account.gold.id
+  filesystem_name    = azurerm_storage_data_lake_gen2_filesystem.gold_crypto.name
+
+  ace {
+    scope       = "default"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_admin_group.object_id
+    permissions = "rwx"
+  }
+  ace {
+    scope       = "access"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_admin_group.object_id
+    permissions = "rwx"
+  }
+  ace {
+    scope       = "default"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_reader_group.object_id
+    permissions = "r--"
+  }
+  ace {
+    scope       = "access"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_reader_group.object_id
+    permissions = "r--"
+  }
+  ace {
+    scope       = "default"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_writer_group.object_id
+    permissions = "-w-"
+  }
+  ace {
+    scope       = "access"
+    type        = "group"
+    id          = azuread_group.gold_crypto_quotes_writer_group.object_id
+    permissions = "-w-"
+  }
+}
