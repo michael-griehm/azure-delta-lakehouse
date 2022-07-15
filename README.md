@@ -200,6 +200,7 @@ An alternate to Dimensional Modeling is Canonical Data Modeling.  Canonical Data
 - [The Google File System](https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf)
 - [Creating and mounting an Azure data lake in Databricks via Terraform](https://federico.is/posts/2020/09/16/mount-azure-data-lake-in-databricks-via-terraform/)
 - [Databricks on Azure with Terraform](https://brendanthompson.com/posts/2021/08/databricks-on-azure-with-terraform)
+- [Access Azure Data Lake Storage Gen2 or Blob Storage using OAuth 2.0 with an Azure service principal](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage#access-azure-data-lake-storage-gen2-or-blob-storage-using-oauth-20-with-an-azure-service-principal)
 
 ## Potential Demo Data Source
 
