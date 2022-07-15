@@ -1,4 +1,20 @@
 # Databricks notebook source
+service_credential = dbutils.secrets.get(scope="my-simple-azure-keyvault-scope",key="delta-lakehouse-dbx-crypto-job-runner-secret")
+
+spark.conf.set("fs.azure.account.auth.type.dltalakehousebronze.dfs.core.windows.net", "OAuth")
+spark.conf.set("fs.azure.account.oauth.provider.type.dltalakehousebronze.dfs.core.windows.net", "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider")
+spark.conf.set("fs.azure.account.oauth2.client.id.dltalakehousebronze.dfs.core.windows.net", "53df3811-1549-4f9b-9568-8c67829cd08a")
+spark.conf.set("fs.azure.account.oauth2.client.secret.dltalakehousebronze.dfs.core.windows.net", service_credential)
+spark.conf.set("fs.azure.account.oauth2.client.endpoint.dltalakehousebronze.dfs.core.windows.net", "https://login.microsoftonline.com/f4cb4c38-d7d4-4c0f-888c-05e0ce4d7437/oauth2/token")
+
+spark.conf.set("fs.azure.account.auth.type.dltalakehousesilver.dfs.core.windows.net", "OAuth")
+spark.conf.set("fs.azure.account.oauth.provider.type.dltalakehousesilver.dfs.core.windows.net", "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider")
+spark.conf.set("fs.azure.account.oauth2.client.id.dltalakehousesilver.dfs.core.windows.net", "53df3811-1549-4f9b-9568-8c67829cd08a")
+spark.conf.set("fs.azure.account.oauth2.client.secret.dltalakehousesilver.dfs.core.windows.net", service_credential)
+spark.conf.set("fs.azure.account.oauth2.client.endpoint.dltalakehousesilver.dfs.core.windows.net", "https://login.microsoftonline.com/f4cb4c38-d7d4-4c0f-888c-05e0ce4d7437/oauth2/token")
+
+# COMMAND ----------
+
 # Set Day Month Year
 from datetime import datetime, timedelta
 
