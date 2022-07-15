@@ -4,7 +4,26 @@ This repo contains information on the Delta Lakehouse Design pattern.
 
 ## What is the Delta Lakehouse?
 
-The Delta Lakehouse is a pattern for creating repositories for raw data in a variety of formats that provides that brings data reliability and fast .analytics
+The Delta Lakehouse is a pattern for creating repositories for raw data in a variety of formats that provides that provides data reliability and fast analytics.
+
+The general structure of a Delta Lakehouse consists of the Data Storage plane, the Data Ingestion plane, and the Data Processing & Presentation plane.
+
+Below is a diagram of a typical Delta Lakehouse architecture within the Azure cloud.
+
+![Delta Lakehouse Diagram](diagrams/deltalake.drawio.svg)
+
+In this architecture, the 3 planes are represented by the following resources:
+
+- Data Storage
+  - Azure Data Lake Gen 2 Storage Acounts, one for each data quality zone.
+- Data Ingestion
+  - Azure Synapse Pipelines
+- Data Processing & Presentation
+  - Azure Databricks
+
+The general flow of data is to ingest the data into the Bronze Storage Account from source systems using the Azure Synapse Pipelines Data Copy Activities.  Then refine the data from Bronze to Silver, and then Silver to Gold using Azure Databricks Jobs which automate the execution of one of more Databrick's Spark notebooks running the Notebooks as an Azure Active Directory Service Principle which has been granted access to the Storage Account via membership in an Azure AD Group that has been granted access to the Storage Account Containers via ACL binding.  Finally, the data is exposed from the Gold layer to the Reporting and Analytic consumers via the Databrick's Spark SQL APIs which process the requests thru a dedicated data presentation Cluster in Databricks.
+
+## Where are the origins of the Lakehouse Concept?
 
 To better understand what a Delta Lakehouse is, we should first review the two enterprise data storage patterns that came before it:
 
