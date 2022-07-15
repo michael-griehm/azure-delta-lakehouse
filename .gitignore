@@ -31,3 +31,4 @@ override.tf.json
 **/*.lock.hcl
 
 .vscode/settings.json
+dbx/run-job-as-service-principal/dbx-tkn
