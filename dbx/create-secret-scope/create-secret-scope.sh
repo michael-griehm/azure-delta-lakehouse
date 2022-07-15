@@ -6,8 +6,8 @@ curl -X POST 'https://<per-workspace-url>/api/2.0/secrets/scopes/create' \
     "scope_backend_type": "AZURE_KEYVAULT",
     "backend_azure_keyvault":
     {
-      "resource_id": <key-vault-resource-id>,
-      "dns_name": <key-vault-url>
+      "resource_id": "<key-vault-resource-id>",
+      "dns_name": "<key-vault-url>"
     },
     "initial_manage_principal": "users"
   }'
