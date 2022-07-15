@@ -69,17 +69,17 @@ resource "databricks_cluster" "no_aad_passthru_experiment" {
   }
 }
 
-resource "databricks_notebook" "crypto_bronze_to_silver" {
-  source   = "../../notebooks/bronze-to-silver/refine-crypto-today-to-silver.py"
-  path     = "/job-notebooks/bronze-to-silver/refine-crypto-today-to-silver"
-  language = "PYTHON"
-}
+# resource "databricks_notebook" "crypto_bronze_to_silver" {
+#   source   = "../../notebooks/bronze-to-silver/refine-crypto-today-to-silver.py"
+#   path     = "/job-notebooks/bronze-to-silver/refine-crypto-today-to-silver"
+#   language = "PYTHON"
+# }
 
-resource "databricks_notebook" "crypto_silver_to_gold" {
-  source   = "../../notebooks/silver-to-gold/refine-crypto-today-to-gold.py"
-  path     = "/job-notebooks/silver-to-gold/refine-crypto-today-to-gold"
-  language = "PYTHON"
-}
+# resource "databricks_notebook" "crypto_silver_to_gold" {
+#   source   = "../../notebooks/silver-to-gold/refine-crypto-today-to-gold.py"
+#   path     = "/job-notebooks/silver-to-gold/refine-crypto-today-to-gold"
+#   language = "PYTHON"
+# }
 
 # resource "databricks_job" "refine_crypto_today_job" {
 #   name = "refine-crypto-today-job"
