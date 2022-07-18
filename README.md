@@ -15,13 +15,13 @@ Below is a diagram of a typical Delta Lakehouse architecture within the Azure cl
 In this architecture, the 3 planes are represented by the following resources:
 
 - Data Storage
-  - Azure Data Lake Gen 2 Storage Acounts, one for each data quality zone.
+  - Azure Data Lake Gen 2 Storage Accounts, one for each data quality zone.
 - Data Ingestion
   - Azure Synapse Pipelines
 - Data Processing & Presentation
   - Azure Databricks
 
-The general flow of data is to ingest the data into the Bronze Storage Account from source systems using the Azure Synapse Pipelines Data Copy Activities.  Then refine the data from Bronze to Silver, and then Silver to Gold using Azure Databricks Jobs which automate the execution of one of more Databrick's Spark notebooks running the Notebooks as an Azure Active Directory Service Principle which has been granted access to the Storage Account via membership in an Azure AD Group that has been granted access to the Storage Account Containers via ACL binding.  Finally, the data is exposed from the Gold layer to the Reporting and Analytic consumers via the Databrick's Spark SQL APIs which process the requests thru a dedicated data presentation Cluster in Databricks.
+The general flow of data is to ingest the data into the Bronze Storage Account from source systems using the Azure Synapse Pipelines Data Copy Activities.  Then refine the data from Bronze to Silver, and then Silver to Gold using Azure Databricks Jobs which automate the execution of one of more Databricks Spark notebooks running the Notebooks as an Azure Active Directory Service Principle which has been granted access to the Storage Account via membership in an Azure AD Group that has been granted access to the Storage Account Containers via ACL binding.  Finally, the data is exposed from the Gold layer to the Reporting and Analytic consumers via the Databricks Spark SQL APIs which process the requests thru a dedicated data presentation Cluster in Databricks.
 
 ## Where are the origins of the Lakehouse Concept?
 
@@ -43,7 +43,7 @@ As organizations began to realize the value of data in the internet age, the nee
 - Data Warehouse
   - Benefits
     - Familiar
-    - Managed Strucutred Data model we can give to the business
+    - Managed Structured Data model we can give to the business
   - Drawbacks
     - Too rigid
     - Too slow
@@ -68,13 +68,13 @@ Below is a list of the main file formats used in data lakes
 
 #### CSV
 
-
+> A comma-separated values (CSV) file is a delimited text file that uses a comma to separate values. Each line of the file is a data record. Each record consists of one or more fields, separated by commas. The use of the comma as a field separator is the source of the name for this file format. A CSV file typically stores tabular data (numbers and text) in plain text, in which case each line will have the same number of fields.
 
 - Benefits
   - Human Readable
   - Easy to read and write
   - Flexible
-- Brawbacks
+- Drawbacks
   - Schema-on-Read, no metadata
   - No compression
   - No ACID compliance
@@ -82,36 +82,76 @@ Below is a list of the main file formats used in data lakes
 
 #### Avro
 
+> An AVRO file is a data file created by Apache Avro, an open source data serialization system used by Apache Hadoop. It contains data serialized in a compact binary format and schema in JSON format that defines the data types. AVRO files may also store markers if the datasets are too large and need to be split into subsets when processed by Apache MapReduce in Apache Hadoop.
+
 - Benefits
   - Some compression
   - Human readable metadata
 - Drawbacks
-  - No ACID compliance
-  - Must have a data processing engine to read and write
-  - Unfamiliar processing pattern
+  - Not ACID compliant.
+  - Must have a data processing engine to read and write.
+  - Unfamiliar processing pattern.
 
 #### Parquet
 
-#### Delta
+> Apache Parquet is an open source, column-oriented data file format designed for efficient data storage and retrieval. It provides efficient data compression and encoding schemes with enhanced performance to handle complex data in bulk. Apache Parquet is designed to be a common interchange format for both batch and interactive workloads. It is similar to other columnar-storage file formats available in Hadoop, namely RCFile and ORC.
 
+- Benefits
+  - Good for storing big data of any kind, such as structured data tables, images, videos, documents.
+  - Saves on cloud storage space by using highly efficient column-wise compression, and flexible encoding schemes for columns with different data types.
+  - Increased data throughput and performance using techniques like data skipping, whereby queries that fetch specific column values need not read the entire row of data.
+- Drawbacks
+  - Not ACID compliant.
+  - Must have a data processing engine to read and write.
+  - Unfamiliar processing pattern.
 
+#### Delta Lake
 
-## A Brief History of Big Data
+> Delta Lake is an open source storage layer that brings reliability to data lakes. Delta Lake provides ACID transactions, scalable metadata handling, and unifies streaming and batch data processing. Delta Lake runs on top of your existing data lake and is fully compatible with Apache Spark APIs
 
-In the initial phase of the computer age, Moores law drove the increases in storage and computing capabilities year over year.
+- Benefits
+  - Good for storing big data of any kind, such as structured data tables, images, videos, documents.
+  - Saves on cloud storage space by using highly efficient column-wise compression, and flexible encoding schemes for columns with different data types.
+  - Increased data throughput and performance using techniques like data skipping, whereby queries that fetch specific column values need not read the entire row of data.
+  - ACID compliant.
+  - Allows for Spark SQL `UPDATE` commands that provide a familiar processing pattern.
+- Drawbacks
+  - Must have a data processing engine to read and write.
+
+## A Brief History of Computing
+
+### The Computing Eras
+
+- Pre-Internet Era
+- Internet Era
+- Artificial Intelligence Era
+
+### The Pre-Internet Era
+
+The Pre-Internet Era was defined by the creation of Software Applications that were installed on User's computers.  All the data processing was done either on the User's computer or a single server when the application was deployed in a Client -> Server architecture.  Processing capacity was governed by the physical limitations of the User's Computer or the single Server.
+
+During this era, Moore's law drove the increases in storage and computing capabilities.
 
 > "Moore's law is a term used to refer to the observation made by Gordon Moore in 1965 that the number of transistors in a dense integrated circuit (IC) doubles about every two years.
 > Moore’s law isn’t really a law in the legal sense or even a proven theory in the scientific sense (such as E = mc2). Rather, it was an observation by Gordon Moore in 1965 while he was working at Fairchild Semiconductor: the number of transistors on a microchip (as they were called in 1965) doubled about every year."
 
-This was a natual Vertical Scaling.  Thereby Vertical Scaling was the initial paradigm to meet the world's desire for more complex computing solutions, and hence more computing power.
+This was a natural Vertical Scaling.  Thereby Vertical Scaling was the initial paradigm to meet the world's desire for more complex computing solutions, and hence more computing power.
 
 However with the transition from the initial computer age to the internet age and the slow down of the doubling of Moore's law due to science reaching physical limitations, Vertical Scaling was no longer able to meet the growing desire for global scale computing capacity.  Horizontal Scaling was the answer to that problem.
 
-### Google's Contribution
+### The Internet Era
+
+The Internet Era is defined by the creation of Software Systems with multiple distinct System Modules all deployed using High Availability architectures.
+
+Many users using a single System, with much greater processing and storage capacity requirements.
+
+Increases in the processing and storage capacity were driven by Distributed Computing.
+
+## Google's Contribution to Distributed Computing
 
 Google is likely the most well known organization that defined a technical solution using the Horizontal Scaling pattern to realize the world's desire for global computing solutions.
 
-Google's open source midset led them to publish white papers on the two pillars of their Horizontal Scaling pattern they used to collect, catalogue, and index all the webpages of the internet.
+Google's open source mindset led them to publish white papers on the two pillars of their Horizontal Scaling pattern they used to collect, catalogue, and index all the webpages of the internet.
 
 - [The Google File System](https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf)
 - [MapReduce](https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf)
@@ -209,17 +249,21 @@ An alternate to Dimensional Modeling is Canonical Data Modeling.  Canonical Data
 
 ## References
 
+- [Access Azure Data Lake Storage Gen2 or Blob Storage using OAuth 2.0 with an Azure service principal](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage#access-azure-data-lake-storage-gen2-or-blob-storage-using-oauth-20-with-an-azure-service-principal)
 - [Apache Spark](https://slower.udemy.com/course/apache-spark-programming-in-python-for-beginners/learn/lecture/20156416#overview)
+- [AVRO File Extension](https://fileinfo.com/extension/avro#:~:text=An%20AVRO%20file%20is%20a%20data%20file%20created,in%20JSON%20format%20that%20defines%20the%20data%20types.)
+- [Comma-separated values](https://en.wikipedia.org/wiki/Comma-separated_values)
+- [Creating and mounting an Azure data lake in Databricks via Terraform](https://federico.is/posts/2020/09/16/mount-azure-data-lake-in-databricks-via-terraform/)
 - [Databricks, Delta Lake and You - Simon Whiteley](https://www.youtube.com/watch?v=y91r_DLMEq8)
+- [Databricks on Azure with Terraform](https://brendanthompson.com/posts/2021/08/databricks-on-azure-with-terraform)
 - [Data Modelling: From Single Table To Star Schema - Chris Barber](https://www.youtube.com/watch?v=F4tK0dwJKU4)
-- [Hadoop Distributed File System](https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html)
-- [Moore's Law](https://www.synopsys.com/glossary/what-is-moores-law.html#:~:text=Definition,as%20E%20%3D%20mc2)
-- [MapReduce](https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf)
+- [Delta Lake guide](https://docs.microsoft.com/en-us/azure/databricks/delta/)
 - [The Delta Lake Series Lakehouse](https://databricks.com/wp-content/uploads/2021/04/The-Delta-Lake-Series-Lakehouse-012921.pdf?itm_data=nurturety-card-lakehouse-pdf)
 - [The Google File System](https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf)
-- [Creating and mounting an Azure data lake in Databricks via Terraform](https://federico.is/posts/2020/09/16/mount-azure-data-lake-in-databricks-via-terraform/)
-- [Databricks on Azure with Terraform](https://brendanthompson.com/posts/2021/08/databricks-on-azure-with-terraform)
-- [Access Azure Data Lake Storage Gen2 or Blob Storage using OAuth 2.0 with an Azure service principal](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage#access-azure-data-lake-storage-gen2-or-blob-storage-using-oauth-20-with-an-azure-service-principal)
+- [Hadoop Distributed File System](https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html)
+- [MapReduce](https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf)
+- [Moore's Law](https://www.synopsys.com/glossary/what-is-moores-law.html#:~:text=Definition,as%20E%20%3D%20mc2)
+- [Parquet](https://databricks.com/glossary/what-is-parquet#:~:text=What%20is%20Parquet%3F%20Apache%20Parquet%20is%20an%20open,enhanced%20performance%20to%20handle%20complex%20data%20in%20bulk.)
 
 ## Potential Demo Data Source
 
