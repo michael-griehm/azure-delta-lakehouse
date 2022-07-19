@@ -153,8 +153,8 @@ Google is likely the most well known organization that defined a technical solut
 
 Google's open source mindset led them to publish white papers on the two pillars of their Horizontal Scaling pattern they used to collect, catalogue, and index all the webpages of the internet.
 
-- [The Google File System](https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf)
-- [MapReduce](https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf)
+- [The Google File System](https://ai.google/research/pubs/pub51)
+- [MapReduce](https://ai.google/research/pubs/pub62)
 
 ### The Google File System
 
@@ -173,9 +173,7 @@ MapReduce is defined in the Google whitepaper as follows:
 > "MapReduce is a programming model and an associated implementation for processing and generating large
 data sets. Users specify a map function that processes a key/value pair to generate a set of intermediate key/value pairs, and a reduce function that merges all intermediate values associated with the same intermediate key....
 >
-> Programs written in this functional style are automatically parallelized and executed on a large cluster of commodity machines. The run-time system takes care of the
-details of partitioning the input data, scheduling the program’s execution across a set of machines, handling machine failures, and managing the required inter-machine
-communication. This allows programmers without any
+> Programs written in this functional style are automatically parallelized and executed on a large cluster of commodity machines. The run-time system takes care of the details of partitioning the input data, scheduling the program’s execution across a set of machines, handling machine failures, and managing the required inter-machine communication. This allows programmers without any
 experience with parallel and distributed systems to easily utilize the resources of a large distributed system."
 
 MapReduce led to the open source project named [Apache Spark]([documents/spark-the-definitive-guide.pdf](https://analyticsdata24.files.wordpress.com/2020/02/spark-the-definitive-guide40www.bigdatabugs.com_.pdf)).  Per the book "Spark The Definitive Guide":
@@ -201,11 +199,11 @@ The Apache Spark architecture is shown below, most of the development done using
 
 ## Data Modeling in a Lakehouse
 
-With the rise in the ETL and ELT marketshare of platforms such as Databricks and Azure Data Lake Gen 2, it is clear that the Delta Lakehouse data ingestion and storage pattern is here to stay.  With that, the question becomes 'What is the best data modeling technique for the Delta Lakehouse'.
+With the rise in the ETL and ELT market share of platforms such as Databricks and Azure Data Lake Gen 2, it is clear that the Delta Lakehouse data ingestion and storage pattern is here to stay.  With that, the question becomes 'What is the best data modeling technique for the Delta Lakehouse'.
 
 ### Dimensional Modeling
 
-The question of whether Dimensional Modeling is still relevant within a Delta Lakehouse, it is imporant to review the aspects and benefits of Dimensional Modeling.
+The question of whether Dimensional Modeling is still relevant within a Delta Lakehouse, it is important to review the aspects and benefits of Dimensional Modeling.
 
 Per wikipedia, Dimensional Modeling is described as:
 
@@ -228,9 +226,9 @@ There are two main types of Keys in dimensional modeling that provide record uni
   - The Primary Key from the Transactional Source System.
 - Surrogate Key
   - The warehouse's Primary Key.
-  - Should be kept to a single field, no compund surrogate keys, because we do not want to have multiple keys on our Fact table to tie back to the Dimensional table.
-  - Should be an Integer value instead of a Globaly Unique Identifier (GUID) becuase GUID's require 16 bytes where Integers require only 4 bytes.
-  - Used to insulate the data warehouse from changes in the Natural Key, such as a new Transactional Source System or acquisition of other companies, therefore should not be a derivitive of the Natural Key(s).
+  - Should be kept to a single field, no compound surrogate keys, because we do not want to have multiple keys on our Fact table to tie back to the Dimensional table.
+  - Should be an Integer value instead of a Globally Unique Identifier (GUID) because GUID's require 16 bytes where Integers require only 4 bytes.
+  - Used to insulate the data warehouse from changes in the Natural Key, such as a new Transactional Source System or acquisition of other companies, therefore should not be a derivative of the Natural Key(s).
 
 #### Dimension Types
 
@@ -245,9 +243,10 @@ There are 8 dimension types in dimensional modeling, however only 3 are used:
 
 ### Canonical Data Objects
 
-An alternate to Dimensional Modeling is Canonical Data Modeling.  Canonical Data Modeling aims to present entities and relationships in the simplest possible form.  Canonical Data Modeling first started with system integration where the Canonical Data Model was used to communicate between seperate systems.  It was intended to reduce costs by standardizing on agreed data definitions associated with integrating business systems.
+An alternate to Dimensional Modeling is Canonical Data Modeling.  Canonical Data Modeling aims to present entities and relationships in the simplest possible form.  Canonical Data Modeling first started with system integration where the Canonical Data Model was used to communicate between separate systems.  It was intended to reduce costs by standardizing on agreed data definitions associated with integrating business systems.
 
 ## References
+
 
 - [Access Azure Data Lake Storage Gen2 or Blob Storage using OAuth 2.0 with an Azure service principal](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage#access-azure-data-lake-storage-gen2-or-blob-storage-using-oauth-20-with-an-azure-service-principal)
 - [Apache Spark](https://slower.udemy.com/course/apache-spark-programming-in-python-for-beginners/learn/lecture/20156416#overview)
@@ -264,6 +263,7 @@ An alternate to Dimensional Modeling is Canonical Data Modeling.  Canonical Data
 - [MapReduce](https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf)
 - [Moore's Law](https://www.synopsys.com/glossary/what-is-moores-law.html#:~:text=Definition,as%20E%20%3D%20mc2)
 - [Parquet](https://databricks.com/glossary/what-is-parquet#:~:text=What%20is%20Parquet%3F%20Apache%20Parquet%20is%20an%20open,enhanced%20performance%20to%20handle%20complex%20data%20in%20bulk.)
+- [Spark Programming in Python for Beginners](https://slower.udemy.com/course/apache-spark-programming-in-python-for-beginners)
 
 ## Potential Demo Data Source
 
