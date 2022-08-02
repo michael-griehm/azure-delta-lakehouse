@@ -16,7 +16,7 @@ spark.conf.set("fs.azure.account.oauth2.client.endpoint.dltalakehousesilver.dfs.
 # COMMAND ----------
 
 # Set Day Month Year
-from datetime import datetime, timedelta
+from datetime import datetime
 
 today = datetime.utcnow()
 year = today.year

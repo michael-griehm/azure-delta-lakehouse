@@ -88,9 +88,9 @@ Below is a list of the main file formats used in data lakes
   - Some compression
   - Human readable metadata
 - Drawbacks
-  - Not ACID compliant.
-  - Must have a data processing engine to read and write.
-  - Unfamiliar processing pattern.
+  - Not ACID compliant
+  - Must have a data processing engine to read and write
+  - Unfamiliar processing pattern
 
 #### Parquet
 
@@ -107,7 +107,7 @@ Below is a list of the main file formats used in data lakes
 
 #### Delta Lake
 
-> Delta Lake is an open source storage layer that brings reliability to data lakes. Delta Lake provides ACID transactions, scalable metadata handling, and unifies streaming and batch data processing. Delta Lake runs on top of your existing data lake and is fully compatible with Apache Spark APIs
+> Delta Lake is an open source storage layer that brings reliability to data lakes. Delta Lake provides ACID transactions, scalable metadata handling, and unifies streaming and batch data processing. Delta Lake runs on top of your existing data lake and is fully compatible with Apache Spark APIs.
 
 - Benefits
   - Good for storing big data of any kind, such as structured data tables, images, videos, documents.
@@ -117,6 +117,7 @@ Below is a list of the main file formats used in data lakes
   - Allows for Spark SQL `UPDATE` commands that provide a familiar processing pattern.
 - Drawbacks
   - Must have a data processing engine to read and write.
+  - Requires more storage capacity compared to other options to enable ACID compatibility.
 
 ## A Brief History of Computing
 
@@ -192,9 +193,41 @@ The Apache Spark architecture is shown below, most of the development done using
 
 ### Spark
 
+Apache Spark's execution model consists of submitting the execution of a Spark application via the `spark-submit` command.  When the `spark-submit` command is issued to the Spark Cluster, then several things are created:
 
+- Driver Process
+- Spark Session
+- Executor Processes
+
+Below are three examples of a `spark-submit' invocation:
+
+    // Driver Process and Spark Session hosted on a Cluster Node
+    spark-submit \
+      -- class my.app.name \
+      -- master k8s://11.22.33:404
+      -- driver-memory 20G
+      -- driver-cores 4
+      -- num-executors
+      -- executor-memory 20G
+      -- executor-cores 4
+      -- deploy-mode cluster
+
+    // Driver Process and Spark Session hosted on the User's Computer
+    spark-submit \
+      -- class my.app.name \
+      -- master k8s://11.22.33:404
+      -- num-executors
+      -- executor-memory 20G
+      -- executor-cores 4
+      -- deploy-mode client
+
+    // Everything hosted on the User's Computer
+    spark-submit \
+      -- class my.app.name \
+      -- master local[3]
 
 ## Databricks
+
 
 
 ## Data Modeling in a Lakehouse
@@ -247,12 +280,13 @@ An alternate to Dimensional Modeling is Canonical Data Modeling.  Canonical Data
 
 ## References
 
-
 - [Access Azure Data Lake Storage Gen2 or Blob Storage using OAuth 2.0 with an Azure service principal](https://docs.microsoft.com/en-us/azure/databricks/data/data-sources/azure/azure-storage#access-azure-data-lake-storage-gen2-or-blob-storage-using-oauth-20-with-an-azure-service-principal)
 - [Apache Spark](https://slower.udemy.com/course/apache-spark-programming-in-python-for-beginners/learn/lecture/20156416#overview)
+- [Apache Spark in Wikipedia](https://en.wikipedia.org/wiki/Apache_Spark)
 - [AVRO File Extension](https://fileinfo.com/extension/avro#:~:text=An%20AVRO%20file%20is%20a%20data%20file%20created,in%20JSON%20format%20that%20defines%20the%20data%20types.)
 - [Comma-separated values](https://en.wikipedia.org/wiki/Comma-separated_values)
 - [Creating and mounting an Azure data lake in Databricks via Terraform](https://federico.is/posts/2020/09/16/mount-azure-data-lake-in-databricks-via-terraform/)
+- [Databricks architecture overview](https://docs.databricks.com/getting-started/overview.html)
 - [Databricks, Delta Lake and You - Simon Whiteley](https://www.youtube.com/watch?v=y91r_DLMEq8)
 - [Databricks on Azure with Terraform](https://brendanthompson.com/posts/2021/08/databricks-on-azure-with-terraform)
 - [Data Modelling: From Single Table To Star Schema - Chris Barber](https://www.youtube.com/watch?v=F4tK0dwJKU4)
