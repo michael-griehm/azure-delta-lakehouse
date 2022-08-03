@@ -81,55 +81,55 @@ resource "databricks_notebook" "crypto_silver_to_gold" {
   language = "PYTHON"
 }
 
-resource "databricks_job" "refine_crypto_today_job" {
-  name = "refine-crypto-today-job"
+# resource "databricks_job" "refine_crypto_today_job" {
+#   name = "refine-crypto-today-job"
 
-  job_cluster {
-    job_cluster_key = "refine-crypto-today-job-cluster"
+#   job_cluster {
+#     job_cluster_key = "refine-crypto-today-job-cluster"
 
-    new_cluster {
-      num_workers   = 2
-      spark_version = data.databricks_spark_version.latest.id
-      node_type_id  = data.databricks_node_type.smallest.id
-    }
-  }
+#     new_cluster {
+#       num_workers   = 2
+#       spark_version = data.databricks_spark_version.latest.id
+#       node_type_id  = data.databricks_node_type.smallest.id
+#     }
+#   }
 
-  task {
-    task_key = "a_bronze_to_silver"
+#   task {
+#     task_key = "a_bronze_to_silver"
 
-    job_cluster_key = "refine-crypto-today-job-cluster"
+#     job_cluster_key = "refine-crypto-today-job-cluster"
 
-    notebook_task {
-      notebook_path = databricks_notebook.crypto_bronze_to_silver.path
-    }
-  }
+#     notebook_task {
+#       notebook_path = databricks_notebook.crypto_bronze_to_silver.path
+#     }
+#   }
 
-  task {
-    task_key = "b_silver_to_gold"
+#   task {
+#     task_key = "b_silver_to_gold"
 
-    depends_on {
-      task_key = "a_bronze_to_silver"
-    }
+#     depends_on {
+#       task_key = "a_bronze_to_silver"
+#     }
 
-    job_cluster_key = "refine-crypto-today-job-cluster"
+#     job_cluster_key = "refine-crypto-today-job-cluster"
 
-    notebook_task {
-      notebook_path = databricks_notebook.crypto_silver_to_gold.path
-    }
-  }
+#     notebook_task {
+#       notebook_path = databricks_notebook.crypto_silver_to_gold.path
+#     }
+#   }
 
-  email_notifications {
-    on_start                  = [data.azuread_user.workload_admin.user_principal_name]
-    on_failure                = [data.azuread_user.workload_admin.user_principal_name]
-    on_success                = [data.azuread_user.workload_admin.user_principal_name]
-    no_alert_for_skipped_runs = true
-  }
+#   email_notifications {
+#     on_start                  = [data.azuread_user.workload_admin.user_principal_name]
+#     on_failure                = [data.azuread_user.workload_admin.user_principal_name]
+#     on_success                = [data.azuread_user.workload_admin.user_principal_name]
+#     no_alert_for_skipped_runs = true
+#   }
 
-  schedule {
-    quartz_cron_expression = "0 45 2,5,14,17,20,23, ? * * *"
-    timezone_id            = "UTC"
-  }
-}
+#   schedule {
+#     quartz_cron_expression = "0 45 2,5,14,17,20,23, ? * * *"
+#     timezone_id            = "UTC"
+#   }
+# }
 
 data "azurerm_key_vault" "secret_scope_vault" {
   resource_group_name = data.azurerm_resource_group.rg.name
