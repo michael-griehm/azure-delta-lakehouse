@@ -115,6 +115,7 @@ Below is a list of the main file formats used in data lakes
   - Increased data throughput and performance using techniques like data skipping, whereby queries that fetch specific column values need not read the entire row of data.
   - ACID compliant.
   - Allows for Spark SQL `UPDATE` commands that provide a familiar processing pattern.
+  - Automatically resolves caching issues that can arise from the use of other file formats.
 - Drawbacks
   - Must have a data processing engine to read and write.
   - Requires more storage capacity compared to other options to enable ACID compatibility.
@@ -228,7 +229,45 @@ Below are three examples of a `spark-submit' invocation:
 
 ## Databricks
 
+Databricks is the world's first Delta Lakehouse Platform that is created by the creators of Spark and the Delta Lake file format.
 
+### Databricks and GitHub
+
+Databricks repos can help facilitate CI/CD workflows by enabling commits and code pushes to GitHub that can trigger CI/CD processes.
+
+### Delta Tables
+
+Delta Tables enable SQL like code and interactions to data that reside within Delta Lake file formats within a Distributed Storage account.
+
+Below is an example of code to create a database located in a specific storage location:
+
+    CREATE DATABASE IF NOT EXISTS customer360 LOCATION
+'/customer/customer360';
+
+Below is an example of code to create a Delta table within the DBFS (also called a managed table):
+
+     CREATE OR REPLACE TABLE table_name (
+      id STRING,
+      birthDate DATE,
+      avgRating FLOAT
+      )
+
+A Delta table can also be created by adopting column names and data types from a `SELECT` query as shown below:
+
+    CREATE TABLE customersPerCountry AS
+    SELECT country, COUNT(*) AS customers
+    FROM customerLocations
+    GROUP BY country;
+
+Data can be appended to a Delta Table using the following SQL keywords:
+
+    INSERT INTO
+
+Z-Ordering can be used to improve performance of queries when target records are sparsely located throughout data files.
+
+To dedupliacte records returned in a query from a Delta Table, use the `DISTINCT` operator.
+
+    SELECT DISTINCT * FROM my_table;
 
 ## Data Modeling in a Lakehouse
 
