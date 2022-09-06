@@ -1,4 +1,4 @@
-name: destroy-workload-demo
+name: destroy
 on:
   schedule:
     - cron: "0 3 * * *"
