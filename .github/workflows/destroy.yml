@@ -45,7 +45,7 @@ jobs:
           ARM_ACCESS_KEY: ${{ steps.get-deployer-secret.outputs.tfdeltalakehouseed-access-key }}
         working-directory: ${{ env.WORKLOAD_WORKING_DIRECTORY }}
         run: terraform init
-      - name:  'Terraform Apply'
+      - name:  'Terraform Destory'
         env:
           ARM_CLIENT_SECRET: ${{ steps.get-deployer-secret.outputs.delta-lakehouse-demo-eastus2-deployer }}
           ARM_ACCESS_KEY: ${{ steps.get-deployer-secret.outputs.tfdeltalakehouseed-access-key }}
