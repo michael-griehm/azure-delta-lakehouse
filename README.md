@@ -4,7 +4,7 @@ This repo contains information on the Delta Lakehouse Design pattern.
 
 ## What is the Delta Lakehouse?
 
-The Delta Lakehouse is a pattern for creating repositories for raw data in a variety of formats that provides that provides data reliability and fast analytics.
+The Delta Lakehouse is a pattern for creating repositories for raw data in a variety of formats that provides data reliability and fast analytics.
 
 The general structure of a Delta Lakehouse consists of the Data Storage plane, the Data Ingestion plane, and the Data Processing & Presentation plane.
 
